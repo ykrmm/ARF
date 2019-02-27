@@ -12,7 +12,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import matplotlib.pyplot as plt
 import operator
-
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 
 
@@ -94,6 +95,7 @@ class noyau_parzen:
         
     def indicatrice_phi(self,coord):
         phi = np.sqrt(sum([i**2 for i in coord]))
+        #print(phi)
         if phi <=0.5:
             return 1
         else:
@@ -103,7 +105,6 @@ class noyau_parzen:
     def densite(self,h,yx): 
         """
         On donne en paramètre le point d'intéret
-        qu'on veut étudier les coordonnées minimales et maximales en x y 
         ainsi que h la longueur de l'hypercube.
         
         Renvoie l'estimation de densité au point yx.
@@ -115,33 +116,71 @@ class noyau_parzen:
             coord = self.data[self.poi][clef][0]
             d = tuple(np.divide(tuple(map(operator.sub, yx, coord)),h)) # Pour chaque coordonnées des pts d'intérets on calcule la difference d avec la coordonnée yx
             
-            k+= self.indicatrice_phi(d)
+            k+= (self.indicatrice_phi(d))/h**2
             
         
-        return k/(h**2*self.N)
+        return k/(self.N)
     
     
     def estimation_parzen(self,h):
         self.h = h #LONGUEUR HYPERCUBE. 
         nbcubex = int((self.xmax -self.xmin)/self.h)   # Nombre d'hypercube de longueur h qu'on peut mettre sur l'axe x. 
         nbcubey = int((self.ymax - self.ymin)/self.h)  # Nombre d'hypercube de longueur h qu'on peut mettre sur l'axe y.
-        """self.xinter = (self.xmax-self.xmin)/self.h
-        self.yinter = (self.ymax-self.ymin)/self.h"""
+      
+        
+        
         self.mat = np.zeros((nbcubey,nbcubex)) # Va contenir les estimations de densités centré sur les hypercubes
-        print ('xmin = ',self.xmin," ymin = ",self.ymin)
+       
+        
+        
         for j in range(0,nbcubey):
             for i in range(0,nbcubex):
                 x = self.xmin + i*self.h
                 y = self.ymin + j*self.h
                 point = (y+(self.h/2),x+(self.h/2)) # Le point est le centre de l'hypercube c'est ici qu'on calcul la densité
                 d = self.densite(self.h,point)
-                print("densité de ",point," = ",d)
                 self.mat[j][i] =d
         return self.mat
 
 
     def affichage_3D(self):
-        pass            
+        
+        
+        
+       
+        
+        # Make data.
+        X = np.arange(self.xmin, self.xmax, self.h)
+        Y = np.arange(self.ymin, self.ymax, self.h)
+       
+        Z = np.zeros((len(Y),len(X)))
+        
+        X, Y = np.meshgrid(X, Y)
+        
+        for j in range(len(Y)):
+            for i in range(len(X)):
+                x = self.xmin + i*self.h
+                y = self.ymin + j*self.h
+                point = (y+(self.h/2),x+(self.h/2)) # Le point est le centre de l'hypercube c'est ici qu'on calcul la densité
+                d = self.densite(self.h,point)
+                Z[j][i] = d
+                
+        
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+        surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,cmap=cm.RdBu,linewidth=0, antialiased=False)
+        
+        ax.zaxis.set_major_locator(LinearLocator(10))
+        ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+        
+        fig.colorbar(surf, shrink=0.5, aspect=5)
+        
+        fig1 = plt.gcf()
+        
+        plt.show()
+        fig1.savefig('parzen3Dh='+str(self.h)+'.png',dpi=100)
+        plt.close()
+               
         
         
             
