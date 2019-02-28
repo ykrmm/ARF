@@ -14,21 +14,34 @@ def mse(datax,datay,w):
 
 def mse_g(datax,datay,w):
     """ retourne le gradient moyen de l'erreur au moindres carres """
-    pass
-
-def hinge(datax,datay,w):
-    """ retourn la moyenne de l'erreur hinge """
     resultat = 0
     taille = len(datax)
     for i in range(taille):
-        resultat+=(max(0,-datay[i]*np.matmul(datax[i],w)))
+        resultat += 2*np.matmul(datax[i],w)-2*sum(datay[i]*datax[i])
+    return resultat/taille
+
+def hinge(datax,datay,w):
+    """ retourn la moyenne de l'erreur hinge """
+    
+    #return np.maximum(np.zeros((testy.shape)),np.dot(testy,np.dot(testx,w.T)))
+    
+    resultat = 0
+    taille = len(datax)
+    for i in range(taille):
+        resultat+=(max(0,-datay[i]*np.matmul(datax[i],w.T)))
     return resultat/taille
 
 def hinge_g(datax,datay,w):
     """ retourne le gradient moyen de l'erreur hinge """
-    pass
+    resultat = np.zeros((w.shape))
+    taille = len(datax)
+    for i in range(taille):
+        if -datay[i]*np.dot(datax[i],w.T) < 0:
+            resultat += -datay[i]*datax[i]
+    return resultat/taille
 
 class Lineaire(object):
+    
     def __init__(self,loss=hinge,loss_g=hinge_g,max_iter=1000,eps=0.01):
         """ :loss: fonction de cout
             :loss_g: gradient de la fonction de cout
@@ -50,15 +63,25 @@ class Lineaire(object):
         datax = datax.reshape(N,-1)
         D = datax.shape[1]
         self.w = np.random.random((1,D))
-        pass
+        for i in range(self.max_iter):
+            self.w = self.w - self.eps*self.loss_g(datax,datay,self.w)
+           
+        
 
     def predict(self,datax):
         if len(datax.shape)==1:
             datax = datax.reshape(1,-1)
-        pass
+        return np.sign(np.matmul(datax,self.w.T))
 
     def score(self,datax,datay):
-        pass
+        score = 0
+        taille = len(datax)
+        for i in range(taille):
+            if self.predict(datax[i]) == datay[i]:
+                score += 1 
+        return score/taille
+
+        
 
 
 
@@ -91,6 +114,10 @@ if __name__=="__main__":
     plot_error(trainx,trainy,mse)
     plt.figure()
     plot_error(trainx,trainy,hinge)
+
+    #testx = np.hstack((testx,np.ones((testx.shape[0],1)))) # On ajoute un biais
+    #trainx = np.hstack((trainx,np.ones((trainx.shape[0],1)))) # On ajoute un biais
+
     perceptron = Lineaire(hinge,hinge_g,max_iter=1000,eps=0.1)
     perceptron.fit(trainx,trainy)
     print("Erreur : train %f, test %f"% (perceptron.score(trainx,trainy),perceptron.score(testx,testy)))
