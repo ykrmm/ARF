@@ -142,7 +142,18 @@ class noyau_parzen:
                 self.mat[j][i] =d
         return self.mat
 
-
+    def predict(self,coord):
+        if coord[0] < self.ymin or coord[1] < self.xmin or coord[0] > self.ymax or coord[1] > self.xmax : 
+            raise ValueError('coords must be between xmin xmax and ymin ymax')
+            
+        else:
+             density = self.densite(self.h,coord)
+             
+             print( "The density at this point ",coord," is ",density)
+             return density 
+    
+    
+    
     def affichage_3D(self):
         
         

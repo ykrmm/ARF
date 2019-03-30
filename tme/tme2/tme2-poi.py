@@ -25,7 +25,7 @@ poidata = pickle.load(open("data/poi-paris.pkl","rb"))
 print("Liste des types de POI" , ", ".join(poidata.keys()))
 
 ## Choix d'un poi
-typepoi = "restaurant"
+typepoi = "atm"
 
 ## Creation de la matrice des coordonnees des POI
 geo_mat = np.zeros((len(poidata[typepoi]),2))
@@ -41,7 +41,7 @@ plt.scatter(geo_mat[:,1],geo_mat[:,0],alpha=0.8,s=3)
 ###################################################
 
 # discretisation pour l'affichage des modeles d'estimation de densite
-steps = 200
+steps = 10
 xx,yy = np.meshgrid(np.linspace(xmin,xmax,steps),np.linspace(ymin,ymax,steps))
 grid = np.c_[xx.ravel(),yy.ravel()]
 
@@ -50,9 +50,9 @@ grid = np.c_[xx.ravel(),yy.ravel()]
 #res = np.random.random((steps,steps))
 #H = histogramme(poidata)
 #res = H.fit(typepoi,[xmin,xmax],[ymin,ymax],steps)
-
+#H.predict((48.850,2.32))
 parzen = noyau_parzen(poidata,[xmin,xmax],[ymin,ymax],typepoi)
-res = parzen.estimation_parzen(0.001)
+res = parzen.estimation_parzen(0.015)
 
 
 plt.figure()

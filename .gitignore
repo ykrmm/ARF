@@ -7,3 +7,4 @@
 *.synctex.gz
 *.toc
 *ipynb_checkpoints/
+*__pycache__/*

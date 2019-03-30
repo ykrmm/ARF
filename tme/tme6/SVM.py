@@ -169,5 +169,6 @@ if __name__ == "__main__":
         ax.set_xticks(())
         ax.set_yticks(())
         ax.set_title(title)
+        print("score: ",title, " = ",clf.score(X,y))
     
     plt.show()
