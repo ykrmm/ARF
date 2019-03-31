@@ -129,7 +129,40 @@ Lorsque notre fenêtre est trop petite, notre fonction va ressembler de plus en 
 Comme pour la méthode des histogrammes on peut utiliser de la $cross validation$ pour déterminer la meilleure fenêtre possible de notre modèle.
 \clearpage
 \section{TME 3 : Descente de gradient.}
-Salut
+Dans ce TME nous nous intéressons à la descente de gradient pour optimiser des fonctions simple pour commencer, puis des fonctions qui ne sont plus optimisable analytiquement, comme dans le cas dans une regression logistique.
+\subsection{Optimisation de fonctions}
+Pour débuter avec des fonctions simple nous avons codé la fonction $f(x) = x\cos x$ et sa dérivé $f'(x) = \cos x - x\sin x$.\\
+On voie bien sur la figure suivante que que le gradient en bleu tend vers 0 a mesure que $f$ converge vers un minimum local.\\
+\begin{figure}[h]
+	\center
+	\includegraphics[width=8cm]{figure/tme3/xcox.png} 
+	 \caption{valeurs de $f$ en rouge, et du gradient de $f$ en bleu, avec 150 iteration.}
+	 
+\end{figure}
+On constate la même chose avec la fonction $f(x) = -\log x + x^2$ qui a pour dérivé $f'(x) = -\frac{1}{x}+2x $
+\begin{figure}[h]
+	\center
+	\includegraphics[width=8cm]{figure/tme3/logx.png} 
+	 \caption{valeurs de $f$ en rouge, et du gradient de $f$ en bleu, avec 150 iteration.}
+	 
+\end{figure}
+En ce qui conserne la fonction de Rosenbrock, on peux essayer de visualiser directement grace aux isocourbes ou bien à l'aide d'une projection en 3D de l'espace d'optimisation.\\
+\begin{figure}[h]
+	\center
+	\includegraphics[width=8cm]{figure/tme3/rosenBrock2D.png} 
+	 \caption{Isocourbe de la fonction de coût de Rosenbock.}
+	 
+\end{figure}
+\begin{figure}[h]
+	\center
+	\includegraphics[width=8cm]{figure/tme3/rosenBrock3D.png} 
+	 \caption{Représentation 3D de l'espace de la fonction de Rosenbock.}
+	 
+\end{figure}
+\clearpage
+\subsection{Régression logistique}
+On va teste la classe 1 contre la classe 5 du jeu de données USPS pour la suite du TME. Aprés avoir entrainer le modèle, on observe un taux de 94,6\% de bonne classification sur notre jeu de données. Ce qui est plus faible qu'avec un classificateur bayésien naïf (celui de scikit learn), avec lequel on obtient 99\% de bonne classification. Toute fois il ne faut pas perdre a l'esprit que l'on a teste le score des modèles sur les mêmes données qui nous ont servie a les entraîner.\\
+Pour ce que est des valeurs de w, elles sont extrement proche de 0, puisqu'elles sont compris dans un intervales allant de 0.004 à -0.002.\\
 \section{TME 4 : Perceptron.}
 Dans ce TME on étudie plusieurs fonctions de coût qu'on adapte à l'algorithme du Perceptron. En particulier la fonction de coût des moindres carrés et $Hing\_loss$.\\
 Pour minimiser l'erreur on utilise la descente de gradient comme méthode d'optimisation qu'on implémente pour chaque fonction de coût.\\
@@ -216,7 +249,7 @@ Comme pour le TME sur le Perceptron, on a essayé de comparé les classes de chi
 \verbatiminput{../tme2/tme2-poi.py}
 \clearpage
 \section{Code TME3}
-%\verbatiminput{../tme1/tme1final.py}
+%\verbatiminput{../tme3/tme3-etu.py}
 \clearpage
 \section{Code TME PERCEPTRON}
 \verbatiminput{../tme4_5/tme4_etu.py}
